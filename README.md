@@ -1,11 +1,7 @@
-# TaoTie for FastAPI
+# 海峰
 根据FastAPI框架，集成所有后端技术的新框架
 
 ## 使用
-1. 修改 pyproject.tomal 项目名
-2. 创建环境变量文件.env
-3. fastapi+alembic+ormar: https://pawamoy.github.io/posts/testing-fastapi-ormar-alembic-apps/
-4. 命令
 ~~~bash
    # 指定Python版本
    poetry env use <python version>
