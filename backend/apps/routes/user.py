@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from backend.apps.auth import Authenticated, Permission, get_current_user
 from backend.apps.auth.acl import BaseOperationACL
@@ -13,6 +13,20 @@ router = APIRouter()
 
 class OperationACL(BaseOperationACL):
     __acl__ = [(Allow, Authenticated, "view")]
+
+
+@router.get(
+    "/info",
+    name="用户信息",
+    # dependencies=[Permission.all(["view"], OperationACL)],
+    response_model=DataResponse,
+)
+async def info(token: str = Query(..., title="token")):
+    return DataResponse(
+        code=200,
+        message="success",
+        data=dict(roles=["user", "admin"], name="admin", avatar="123", introduction="11222"),
+    )
 
 
 @router.post(
