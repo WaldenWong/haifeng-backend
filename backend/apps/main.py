@@ -18,6 +18,7 @@ from backend import __version__
 from backend.apps.auth.permission import AuthPermissionDenied
 from backend.apps.core.cache import RedisCache
 from backend.apps.core.errors import ApplicationError
+from backend.apps.core.session import SessionMiddleware
 from backend.apps.models import db
 from backend.apps.routes import router
 from backend.apps.services.user import UserService
@@ -59,6 +60,7 @@ def get_app(version: str = __version__) -> FastAPI:
     app.add_exception_handler(404, not_found_handler)
     app.add_exception_handler(ApplicationError, default_error_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY, same_site=settings.SAME_SITE)
 
     allowed_hosts = ["*"] if not settings.ALLOWED_HOSTS and settings.DEBUG else settings.ALLOWED_HOSTS
     app.add_middleware(

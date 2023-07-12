@@ -18,14 +18,19 @@ class OperationACL(BaseOperationACL):
 @router.get(
     "/info",
     name="用户信息",
-    # dependencies=[Permission.all(["view"], OperationACL)],
+    dependencies=[Permission.all(["view"], OperationACL)],
     response_model=DataResponse,
 )
-async def info(token: str = Query(..., title="token")):
+async def info():
     return DataResponse(
         code=200,
         message="success",
-        data=dict(roles=["user", "admin"], name="admin", avatar="123", introduction="11222"),
+        data=dict(
+            roles=["user", "admin"],
+            name="admin",
+            avatar="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+            introduction="11222",
+        ),
     )
 
 

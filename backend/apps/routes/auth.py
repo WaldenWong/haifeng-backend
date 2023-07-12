@@ -23,8 +23,7 @@ async def captcha_image():
 
 @AuthRouter.post("/login", name="用户登录(json)")
 async def login_json(request: Request, login_data: LoginRequest):
-    return DataResponse(code=200, message="success", data=dict(token="1215123"))
-    # return await AuthService.login_json(request, login_data)
+    return await AuthService.login_json(request, login_data)
 
 
 if settings.DEBUG or settings.TESTING:

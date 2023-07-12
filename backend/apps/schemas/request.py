@@ -24,9 +24,8 @@ class DateTypes(str, Enum):
 
 
 class CaptchaRequest(RWModel):
-    # answer: str = Field(..., description="验证码答案")
-    # challenge: str = Field(..., description="验证码id")
-    ...
+    answer: str = Field(..., description="验证码答案")
+    challenge: str = Field(..., description="验证码id")
 
 
 class LoginRequest(CaptchaRequest):
