@@ -62,7 +62,8 @@ def get_app(version: str = __version__) -> FastAPI:
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
     app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY, same_site=settings.SAME_SITE)
 
-    allowed_hosts = ["*"] if not settings.ALLOWED_HOSTS and settings.DEBUG else settings.ALLOWED_HOSTS
+    # allowed_hosts = ["*"] if not settings.ALLOWED_HOSTS and settings.DEBUG else settings.ALLOWED_HOSTS
+    allowed_hosts = ["*"]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allowed_hosts,

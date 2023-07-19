@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from backend.apps.schemas.goods import (
     GoodsAddRequest,
     GoodsListRequest,
@@ -27,7 +29,22 @@ class GoodsService:
 
     @classmethod
     async def goods_list(cls, request: GoodsListRequest) -> PageListResponse:
-        return PageListResponse(data=[], page=1, page_size=10)
+        return PageListResponse(
+            data=[
+                {
+                    "id": 1,
+                    "data": datetime.now(),
+                    "title": "xxx",
+                    "author": "asf",
+                    "imp": "123123",
+                    "status": 1,
+                    "actions": "12asdf",
+                }
+            ],
+            page=1,
+            page_size=10,
+            total_pages=20,
+        )
 
     @classmethod
     async def goods_delete(cls, goods_id: int) -> PageListResponse:

@@ -26,7 +26,7 @@ class OperationACL(BaseOperationACL):
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
 async def goods_add(request: GoodsAddRequest):
-    return GoodsService.goods_add(request)
+    return await GoodsService.goods_add(request)
 
 
 @router.put(
@@ -35,7 +35,7 @@ async def goods_add(request: GoodsAddRequest):
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
 async def goods_update(request: GoodsUpdateRequest):
-    return GoodsService.goods_update(request)
+    return await GoodsService.goods_update(request)
 
 
 @router.get(
@@ -44,7 +44,7 @@ async def goods_update(request: GoodsUpdateRequest):
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
 async def goods_menu():
-    return GoodsService.goods_menu()
+    return await GoodsService.goods_menu()
 
 
 @router.post(
@@ -53,7 +53,7 @@ async def goods_menu():
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
 async def goods_list(request: GoodsListRequest):
-    return GoodsService.goods_list(request)
+    return await GoodsService.goods_list(request)
 
 
 @router.delete(
@@ -62,4 +62,4 @@ async def goods_list(request: GoodsListRequest):
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
 async def goods_delete(goods_id: int = Query(..., title="商品id")):
-    return GoodsService.goods_delete(goods_id)
+    return await GoodsService.goods_delete(goods_id)

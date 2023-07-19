@@ -62,5 +62,6 @@ class OffsetLimitRequest(FilterRequest):
 
 
 class PageListRequest(FilterRequest):
+    sort: OrderBy = Field(default=OrderBy.DESC, title="排序")
     page: int = Field(default=1, title="页码", gt=0)
     page_size: int = Field(default=15, title="每页条数", gt=0, le=50)

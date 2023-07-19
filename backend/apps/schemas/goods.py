@@ -6,6 +6,7 @@ from enum import Enum
 from pydantic import Field
 
 from backend.apps.schemas import RWModel
+from backend.apps.schemas.request import PageListRequest
 
 
 class GoodsType(str, Enum):
@@ -34,7 +35,7 @@ class GoodsUpdateRequest(Goods):
     ...
 
 
-class GoodsListRequest(RWModel):
+class GoodsListRequest(PageListRequest):
     name: str = Field(None, description="商品名")
     identifier: str = Field(None, description="编号")
     type: GoodsType = Field(None, description="种类")

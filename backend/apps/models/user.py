@@ -22,5 +22,6 @@ class User(Base):
     phone = orm.String(max_length=11, unique=True, nullable=True)
     real_name = orm.String(max_length=11, nullable=True)
     avatar = orm.String(max_length=256, nullable=True)  # 头像
-    expired_at = orm.DateTime(default=default_expired_at)
+    expired_at = orm.DateTime(default=default_expired_at)  # 登录时到期时间
+    stopped_on = orm.DateTime(nullable=True)  # 账户到期时间
     activated = orm.Boolean(index=True, server_default=text("true"))
