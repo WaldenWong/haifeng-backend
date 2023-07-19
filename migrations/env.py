@@ -6,12 +6,14 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from backend.apps.models import BaseMeta
+from backend.apps.models.business import Business
+from backend.apps.models.goods import Goods
 from backend.apps.models.login_log import LoginLog
-from backend.apps.models.role_group import RoleGroup
+from backend.apps.models.sale import Sale
+from backend.apps.models.supplier import Supplier
 
 # ============================= MODELS =============================
 from backend.apps.models.user import User
-from backend.apps.models.user_group import UserGroup
 from backend.apps.models.user_role import UserRole
 from backend.apps.settings import settings
 

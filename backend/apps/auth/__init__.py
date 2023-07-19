@@ -108,8 +108,6 @@ async def get_active_roles(user: UserORM = Depends(get_current_user)) -> list:
         f"user:{user.username}",
         Role.USER.value.format(user_id=user.id),
     }
-    if user.group is not None:
-        roles.add(Role.USER_GROUP_MEMBER.value.format(group_id=user.group))
     user_roles = await UserRoleORM.get_all(user_id=user.id)
     roles = roles.union([r.role for r in user_roles])
     logger.debug(f"user:<{user.username}>  roles:<{roles}>")

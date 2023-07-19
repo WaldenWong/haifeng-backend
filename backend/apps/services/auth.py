@@ -83,8 +83,8 @@ class AuthService:
                                     "nickname": info["nickname"],
                                     "avatar": info.get("avatar"),
                                 }
-                                if info.get("realname"):
-                                    userinfo["realname"] = info["realname"]
+                                if info.get("real_name"):
+                                    userinfo["real_name"] = info["real_name"]
                                 await user.update(
                                     unionid=unionid,
                                     **userinfo,

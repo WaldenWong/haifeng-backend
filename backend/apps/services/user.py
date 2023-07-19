@@ -27,11 +27,9 @@ class UserService:
                     password = "admin1234" if settings.DEBUG else generate_password()
                     user = await UserORM.create(
                         username="admin",
-                        email="backend@test.com",
                         phone="11111111111",
-                        realname="系统管理员",
+                        real_name="系统管理员",
                         password=PasswordContext.hash(password),
-                        group=0,
                     )
                     await UserRoleORM.create(role=Role.SYSTEM_ADMIN, user_id=user.id)
                     logging.info("初始化管理员账号成功")
@@ -47,10 +45,10 @@ class UserService:
     #     clauses += generate_orm_clauses(
     #         {
     #             "username": UserORM.username,
-    #             "realname": UserORM.realname,
+    #             "real_name": UserORM.real_name,
     #             "phone_number": UserORM.phone_number,
     #             "user_group_name": UserGroupORM.name,
-    #             "creator_name": CreatorORM.realname,
+    #             "creator_name": CreatorORM.real_name,
     #             "created_on": UserORM.created_on,
     #             "stopped_on": UserORM.stopped_on,
     #             "activated": UserORM.activated,
@@ -108,7 +106,7 @@ class UserService:
     #             [
     #                 UserORM.id,
     #                 UserORM.username,
-    #                 UserORM.realname,
+    #                 UserORM.real_name,
     #                 UserORM.phone_number,
     #                 UserORM.activated,
     #                 UserORM.avatar,
@@ -118,7 +116,7 @@ class UserService:
     #                 UserORM.district,
     #                 UserORM.created_on,
     #                 UserORM.stopped_on,
-    #                 CreatorORM.realname.label("creator"),
+    #                 CreatorORM.real_name.label("creator"),
     #                 CreatorORM.id.label("creator_id"),
     #                 CreatorORM.username.label("creator_name"),
     #                 UserGroupORM.name.label("user_group"),
@@ -173,8 +171,7 @@ class UserService:
     #
     #     user_kws = dict(
     #         creator=creator_id,
-    #         realname=user_create_in.realname,
-    #         email=user_create_in.email,
+    #         real_name=user_create_in.real_name,
     #         phone_number=user_create_in.phone_number,
     #         province=user_create_in.province,
     #         city=user_create_in.city,
@@ -247,8 +244,6 @@ class UserService:
     #
     #     update_kw: Dict[str, Any] = dict(user_groups=[user_update_in.user_group], stopped_on=user_update_in.stopped_on)
     #
-    #     if user_update_in.email is not None:
-    #         update_kw["email"] = user_update_in.email
     #     if user_update_in.phone_number is not None and target_user.phone_number != user_update_in.phone_number:
     #         if await UserORM.get_by(phone_number=user_update_in.phone_number):
     #             raise UserPhoneExisted
@@ -267,8 +262,8 @@ class UserService:
     #         update_kw["unit_id"] = user_update_in.unit_id
     #     if user_update_in.password is not None:
     #         update_kw["password"] = PasswordContext.hash(user_update_in.password)
-    #     if user_update_in.realname is not None:
-    #         update_kw["realname"] = user_update_in.realname
+    #     if user_update_in.real_name is not None:
+    #         update_kw["real_name"] = user_update_in.real_name
     #
     #     role_create_kws = []
     #
@@ -421,7 +416,7 @@ class UserService:
     #         db.select(
     #             [
     #                 UserORM.username,
-    #                 UserORM.realname,
+    #                 UserORM.real_name,
     #                 UserORM.avatar,
     #                 UserORM.created_on,
     #                 UserORM.province,
@@ -505,16 +500,16 @@ class UserService:
     #         if keyword.isdigit():
     #             clauses += [UserORM.phone_number.like(f"%{keyword}%")]
     #         else:
-    #             clauses += [UserORM.realname.like(f"%{keyword}%")]
+    #             clauses += [UserORM.real_name.like(f"%{keyword}%")]
     #
     #     select_from = UserORM.join(UserRoleORM, UserRoleORM.user_id == UserORM.id)
     #     result = (
     #         await db.select(
-    #             [db.func.distinct(UserORM.id).label("id"), UserORM.realname.label("name"), UserORM.phone_number]
+    #             [db.func.distinct(UserORM.id).label("id"), UserORM.real_name.label("name"), UserORM.phone_number]
     #         )
     #         .select_from(select_from)
     #         .where(db.and_(*clauses))
-    #         .order_by(UserORM.realname)
+    #         .order_by(UserORM.real_name)
     #         .gino.all()
     #     )
     #     return [RoleUser(**_) for _ in result]
