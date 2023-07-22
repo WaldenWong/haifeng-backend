@@ -44,9 +44,9 @@ class AuthService:
         attempts = int(await RedisCache.get(f"backend:login:{ip}:{data.username}") or 0)
         attempts += 1
 
-        if attempts > attempts_limit:
-            if not settings.DEBUG:  # pragma: no cover
-                raise ReachLoginAttemptsLimit
+        # if attempts > attempts_limit:
+        #     if not settings.DEBUG:  # pragma: no cover
+        #         raise ReachLoginAttemptsLimit
 
         if attempts == attempts_limit:
             expire = 60 * 2

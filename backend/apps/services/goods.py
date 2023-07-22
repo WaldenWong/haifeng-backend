@@ -29,18 +29,22 @@ class GoodsService:
 
     @classmethod
     async def goods_list(cls, request: GoodsListRequest) -> PageListResponse:
+        data = [
+            {
+                "id": i,
+                "name": "xxx",
+                "identifier": "GB-154-266",
+                "type": "冻货",
+                "purchase_price": 15.2,
+                "selling_price": 50.5,
+                "inventory": 3000,
+                "sales_volume": 500,
+                "purchase_at": datetime.now(),
+            }
+            for i in range(1, 51)
+        ]
         return PageListResponse(
-            data=[
-                {
-                    "id": 1,
-                    "data": datetime.now(),
-                    "title": "xxx",
-                    "author": "asf",
-                    "imp": "123123",
-                    "status": 1,
-                    "actions": "12asdf",
-                }
-            ],
+            data=data,
             page=1,
             page_size=10,
             total_pages=20,
