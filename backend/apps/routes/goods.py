@@ -39,12 +39,12 @@ async def goods_update(request: GoodsUpdateRequest):
 
 
 @router.get(
-    "/menu",
+    "/items",
     name="商品菜单",
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
-async def goods_menu():
-    return await GoodsService.goods_menu()
+async def goods_items():
+    return await GoodsService.goods_items()
 
 
 @router.post(
@@ -63,3 +63,8 @@ async def goods_list(request: GoodsListRequest):
 )
 async def goods_delete(goods_id: int = Query(..., title="商品id")):
     return await GoodsService.goods_delete(goods_id)
+
+
+@router.get("/types", name="商品种类")
+async def goods_types():
+    return GoodsService.goods_types()

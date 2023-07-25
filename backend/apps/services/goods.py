@@ -5,6 +5,7 @@ from datetime import datetime
 from backend.apps.schemas.goods import (
     GoodsAddRequest,
     GoodsListRequest,
+    GoodsTypeInfo,
     GoodsUpdateRequest,
 )
 from backend.apps.schemas.response import (
@@ -24,7 +25,7 @@ class GoodsService:
         return BoolResponse(message="成功")
 
     @classmethod
-    async def goods_menu(cls) -> DataListResponse:
+    async def goods_items(cls) -> DataListResponse:
         return DataListResponse(data=[])
 
     @classmethod
@@ -53,3 +54,11 @@ class GoodsService:
     @classmethod
     async def goods_delete(cls, goods_id: int) -> PageListResponse:
         return PageListResponse(data=[], page=1, page_size=10)
+
+    @classmethod
+    def goods_types(cls) -> DataListResponse:
+        result = [
+            {"display_name": v.default[0].title, "key": v.default[0].default or k}
+            for k, v in GoodsTypeInfo.__fields__.items()
+        ]
+        return DataListResponse(data=result)
