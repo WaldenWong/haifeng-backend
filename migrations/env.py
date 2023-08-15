@@ -5,7 +5,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from backend.apps.models import BaseMeta
+from backend.apps.models import db
 from backend.apps.models.business import Business
 from backend.apps.models.goods import Goods
 from backend.apps.models.login_log import LoginLog
@@ -32,7 +32,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = BaseMeta.metadata
+target_metadata = db
 
 
 # other values from the config, defined by the needs of env.py,
@@ -42,7 +42,7 @@ target_metadata = BaseMeta.metadata
 
 
 def get_url() -> str:
-    return settings.ALEMBIC_CONFIG.url.render_as_string(hide_password=False)
+    return settings.ALEMBIC_CONFIG.url.__to_string__(hide_password=False)
 
 
 def run_migrations_offline() -> None:

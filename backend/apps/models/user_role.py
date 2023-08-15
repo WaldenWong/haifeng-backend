@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from backend.apps.models import Base, BaseMeta, orm
+from backend.apps.models import Base, db
 
 
 class UserRole(Base):
-    class Meta(BaseMeta):
-        tablename = "user_role"
+    __tablename__ = "user_role"
 
-    user_id = orm.BigInteger(index=True)
-    role = orm.String(max_length=64, index=True)
-    show = orm.String(max_length=64, nullable=True)
+    role = db.Column(db.String(64), index=True)
+    user_id = db.Column(db.BigInteger(), index=True)
+    show = db.Column(db.String(64), nullable=True)

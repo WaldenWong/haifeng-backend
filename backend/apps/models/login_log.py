@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from backend.apps.models import Base, BaseMeta, orm
+from backend.apps.models import Base, db
 
 
 class LoginLog(Base):
-    class Meta(BaseMeta):
-        tablename = "login_log"
+    __tablename__ = "login_log"
 
-    user_id = orm.BigInteger(index=True)
-    ip = orm.String(max_length=128, index=True)
-    port = orm.Integer()
-    country = orm.String(max_length=64, nullable=True)
-    province = orm.String(max_length=64, nullable=True)
-    city = orm.String(max_length=64, index=True, nullable=True)
-    is_pc = orm.Boolean(nullable=True)
-    device = orm.String(max_length=128, nullable=True)
-    os = orm.String(max_length=128)
-    browser = orm.String(max_length=128)
-    ua = orm.String(max_length=512)
-    headers = orm.JSON()
+    user_id = db.Column(db.BigInteger(), index=True)
+    ip = db.Column(db.String(128), index=True)
+    port = db.Column(db.Integer())
+    country = db.Column(db.String(64), nullable=True)
+    province = db.Column(db.String(64), nullable=True)
+    city = db.Column(db.String(64), index=True, nullable=True)
+    is_pc = db.Column(db.Boolean(), nullable=True)
+    device = db.Column(db.String(128), nullable=True)
+    os = db.Column(db.String(128))
+    browser = db.Column(db.String(128))
+    ua = db.Column(db.String(512))
+    headers = db.Column(db.JSON())

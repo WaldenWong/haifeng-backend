@@ -60,10 +60,8 @@ def get_app(version: str = __version__) -> FastAPI:
     app.add_exception_handler(404, not_found_handler)
     app.add_exception_handler(ApplicationError, default_error_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
-    app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY, same_site=settings.SAME_SITE)
 
-    # allowed_hosts = ["*"] if not settings.ALLOWED_HOSTS and settings.DEBUG else settings.ALLOWED_HOSTS
-    allowed_hosts = ["*"]
+    allowed_hosts = ["*"] if not settings.ALLOWED_HOSTS and settings.DEBUG else settings.ALLOWED_HOSTS
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allowed_hosts,
@@ -74,7 +72,7 @@ def get_app(version: str = __version__) -> FastAPI:
     )
     # 当请求的头信息 Accept-Encoding 字段带有"gzip"时，GZipMiddleware负责完成相应的返回结果处理
     app.add_middleware(GZipMiddleware, minimum_size=1000)
-    # app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY, same_site=settings.SAME_SITE)
+    app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY, same_site=settings.SAME_SITE)
 
     if settings.IDE == "prod":
         # TrustedHostMiddleware强制发来的请求必须在Header信息中设置了Host选项，为了避免HTTP Host Header攻击
@@ -85,13 +83,16 @@ def get_app(version: str = __version__) -> FastAPI:
     @app.on_event("startup")
     async def startup_event() -> None:
         if settings.DATABASE_CONFIG.url:
-            await db.connect()
+            await db.set_bind(
+                settings.DATABASE_CONFIG.url.__to_string__(hide_password=False),
+                echo=settings.DB_ECHO_LOG,
+            )
         if not settings.TESTING:  # pragma: no cover
             await UserService.init_admin()
 
     @app.on_event("shutdown")
     async def shutdown_event() -> None:
         await RedisCache.close()
-        await db.disconnect()
+        await db.bind().close()
 
     return app

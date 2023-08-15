@@ -57,3 +57,8 @@ class UserPhoneHasSentTooManyTimes(ApplicationError):
 class NotFilterApi(ApplicationError):
     code = 424
     message = "目标路由不存在或暂不支持条件筛选器，请检查后重试"
+
+
+class GoodsAlreadyExists(ApplicationError):
+    code = 424
+    message = "商品已存在"

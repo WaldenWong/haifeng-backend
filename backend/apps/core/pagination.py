@@ -4,13 +4,13 @@ import math
 from typing import Dict, List, Optional, Sequence, Tuple, Type, Union
 
 from fastapi import FastAPI
-from ormar import Model
 from sqlalchemy import Column, func, nullslast, select
 from sqlalchemy.sql.elements import BinaryExpression, UnaryExpression
 from sqlalchemy.sql.selectable import Select
 
 from backend.apps.core.errors import NotFilterApi
 from backend.apps.core.filter import BaseFilter
+from backend.apps.models import db
 from backend.apps.schemas import RWModel
 from backend.apps.schemas.item import Filter
 from backend.apps.schemas.request import FilterRequest
@@ -83,7 +83,7 @@ def generate_orm_clauses(
 
 
 async def paginate(
-    query: Union[Select, Type[Model]],
+    query: Union[Select, Type[db.Model]],
     schema: Type[RWModel],
     where: Optional[List[BinaryExpression]] = None,
     order_by: Optional[Tuple[UnaryExpression, ...]] = None,
@@ -92,7 +92,7 @@ async def paginate(
     page: int = 1,
     page_size: int = 15,
 ) -> PageListResponse:
-    if isinstance(query, type(Model)):
+    if isinstance(query, type(db.Model)):
         query = query.query
 
     if where is not None:
@@ -121,7 +121,7 @@ async def paginate(
         limit_value = min(remain, page_size)
         query = query.offset(offset_value).limit(limit_value)
         data = [
-            schema(**(isinstance(_, Model) and _.to_dict() or dict(_)))
+            schema(**(isinstance(_, db.Model) and _.to_dict() or dict(_)))
             for _ in await query.gino.all()  # type:ignore[union-attr]
         ]
     return PageListResponse(
@@ -136,14 +136,14 @@ async def paginate(
 
 
 async def offset_limit(
-    query: Union[Select, Type[Model]],
+    query: Union[Select, Type[db.Model]],
     schema: Type[RWModel],
     count: Optional[Select] = None,
     order_by: Optional[UnaryExpression] = None,
     offset: int = 0,
     limit: int = 15,
 ) -> OffsetLimitResponse:
-    query = query.query if isinstance(query, type(Model)) else query
+    query = query.query if isinstance(query, type(db.Model)) else query
     count = query if count is None else count  # type:ignore[assignment]
 
     amount = await select([func.count()]).select_from(count.alias("_q")).gino.scalar()  # type:ignore[union-attr]
@@ -156,7 +156,7 @@ async def offset_limit(
         limit_value = limit - (offset + limit - amount) if offset + limit > amount else limit
         query = query.offset(offset_value).limit(limit_value)
         data = [
-            schema(**(isinstance(_, Model) and _.to_dict() or dict(_)))
+            schema(**(isinstance(_, db.Model) and _.to_dict() or dict(_)))
             for _ in await query.gino.all()  # type:ignore[union-attr]
         ]
     return OffsetLimitResponse(

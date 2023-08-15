@@ -7,7 +7,7 @@ from typing import Dict
 from pydantic import Field
 
 from backend.apps.schemas import RWModel
-from backend.apps.schemas.request import PageListRequest
+from backend.apps.schemas.request import OrderBy, PageListRequest
 
 
 class GoodsType(str, Enum):
@@ -17,9 +17,9 @@ class GoodsType(str, Enum):
 
 
 class GoodsTypeInfo(RWModel):
-    meat: str = (Field(default=GoodsType.meat, title="肉"),)
-    vegetable: str = (Field(default=GoodsType.vegetable, title="蔬菜"),)
-    dry_goods: str = (Field(default=GoodsType.dry_goods, title="干货"),)
+    meat: str = Field(default=GoodsType.meat, title="肉")
+    vegetable: str = Field(default=GoodsType.vegetable, title="蔬菜")
+    dry_goods: str = Field(default=GoodsType.dry_goods, title="干货")
 
 
 # class GoodsTypeOptions(MatchFilter[str]):
@@ -70,3 +70,6 @@ class GoodsListRequest(PageListRequest):
     sales_volume: int = Field(None, title="销量")
     supplier: int = Field(None, description="供应商")
     purchase_at: datetime = Field(None, title="入库时间")
+
+    sort: OrderBy = Field(default=OrderBy.DESC, title="排序")
+    sort_k: str = Field(default="created_on", title="排序字段")

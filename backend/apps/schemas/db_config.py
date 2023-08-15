@@ -27,4 +27,4 @@ class DatabaseURL(BaseModel):
         if isinstance(v, URL):
             return v
         args = {k: str(v) for k, v in values.items() if v is not None}
-        return URL.create(**args)  # type: ignore[arg-type]
+        return URL(**args)  # type: ignore[arg-type]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
+from backend.apps.core.errors import GoodsAlreadyExists
+from backend.apps.models.goods import Goods as GoodsORM
 from backend.apps.schemas.goods import (
     GoodsAddRequest,
     GoodsListRequest,
@@ -11,14 +11,19 @@ from backend.apps.schemas.goods import (
 from backend.apps.schemas.response import (
     BoolResponse,
     DataListResponse,
+    DataResponse,
     PageListResponse,
 )
 
 
 class GoodsService:
     @classmethod
-    async def goods_add(cls, request: GoodsAddRequest) -> BoolResponse:
-        return BoolResponse(message="成功")
+    async def goods_add(cls, request: GoodsAddRequest) -> DataResponse:
+        goods = await GoodsORM.get_by(name=request.name)
+        if goods:
+            raise GoodsAlreadyExists
+        goods = await GoodsORM.create(**request.dict())
+        return DataResponse(data=goods.id)
 
     @classmethod
     async def goods_update(cls, request: GoodsUpdateRequest) -> BoolResponse:
@@ -30,24 +35,13 @@ class GoodsService:
 
     @classmethod
     async def goods_list(cls, request: GoodsListRequest) -> PageListResponse:
-        data = [
-            {
-                "id": i,
-                "name": "xxx",
-                "identifier": "GB-154-266",
-                "type": "冻货",
-                "purchase_price": 15.2,
-                "selling_price": 50.5,
-                "inventory": 3000,
-                "sales_volume": 500,
-                "purchase_at": datetime.now(),
-            }
-            for i in range(1, 51)
-        ]
+        kwargs = request.dict(exclude={"sort", "sort_k", "page", "page_size"}, exclude_none=True)
+        order = getattr(getattr(GoodsORM, request.sort_k), request.sort)()
+        goods = await GoodsORM.objects.filter(**kwargs).order_by(order).all()
         return PageListResponse(
-            data=data,
-            page=1,
-            page_size=10,
+            data=goods,
+            page=request.page,
+            page_size=request.page_size,
             total_pages=20,
         )
 

@@ -3,7 +3,7 @@ import pickle
 from functools import wraps
 from typing import Any, AnyStr, Callable, Optional, TypeVar, Union
 
-from redis import asyncio as aioredis
+import aioredis
 from starlette.responses import Response
 
 from backend.apps.models.user import User as UserORM

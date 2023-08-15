@@ -44,6 +44,7 @@ class AuthService:
         attempts = int(await RedisCache.get(f"backend:login:{ip}:{data.username}") or 0)
         attempts += 1
 
+        # 允许重试次数
         # if attempts > attempts_limit:
         #     if not settings.DEBUG:  # pragma: no cover
         #         raise ReachLoginAttemptsLimit
@@ -83,8 +84,8 @@ class AuthService:
                                     "nickname": info["nickname"],
                                     "avatar": info.get("avatar"),
                                 }
-                                if info.get("real_name"):
-                                    userinfo["real_name"] = info["real_name"]
+                                if info.get("realname"):
+                                    userinfo["realname"] = info["realname"]
                                 await user.update(
                                     unionid=unionid,
                                     **userinfo,
