@@ -62,3 +62,8 @@ class NotFilterApi(ApplicationError):
 class GoodsAlreadyExists(ApplicationError):
     code = 424
     message = "商品已存在"
+
+
+class GoodsNotExists(ApplicationError):
+    code = 424
+    message = "商品不存在"

@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Query
 from backend.apps.auth import Authenticated, Permission, Role, get_current_user
 from backend.apps.auth.acl import BaseOperationACL
 from backend.apps.auth.permission import Allow
+from backend.apps.schemas.response import DataResponse
 from backend.apps.schemas.user import UserAddRequest
 
 router = APIRouter()
@@ -21,6 +22,26 @@ class OperationACL(BaseOperationACL):
 )
 async def user_add(request: UserAddRequest, user=Depends(get_current_user)):
     return {"data": {"user_id": user.id, "request": request}}
+
+
+@router.get(
+    "/info",
+    name="用户信息",
+    dependencies=[Permission("view", OperationACL)],
+)
+async def user_info(user=Depends(get_current_user)):
+    # await UserService.profile()
+    return DataResponse(
+        code=200,
+        message="success",
+        data=dict(
+            roles=["user", "admin"],
+            name="admin",
+            user_id=user.id,
+            avatar="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+            introduction="11222",
+        ),
+    )
 
 
 @router.delete(

@@ -61,7 +61,7 @@ async def goods_list(request: GoodsListRequest):
     name="商品信息列表",
     dependencies=[Permission.all(Role.SYSTEM_ADMIN, OperationACL)],
 )
-async def goods_delete(goods_id: int = Query(..., title="商品id")):
+async def goods_delete(goods_id: int = Query(..., title="商品id", alias="id")):
     return await GoodsService.goods_delete(goods_id)
 
 

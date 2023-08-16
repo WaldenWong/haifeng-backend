@@ -38,7 +38,7 @@ async def judge_user_activated(user: Union[UserORM, Base]) -> bool:
         return False
     else:
         if user.stopped_on and user.stopped_on.date() < datetime.now().date():
-            await user.update(activated=False)
+            await user.update(activated=False).apply()
             return False
     return True
 

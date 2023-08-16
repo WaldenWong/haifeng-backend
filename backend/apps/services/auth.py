@@ -71,7 +71,7 @@ class AuthService:
                     now = datetime.now()
                     expired_at = now + timedelta(minutes=settings.TOKEN_EXPIRE_MINUTES)
                     access_token = create_access_token(data={"sub": user.username}, expire=expired_at)
-                    await user.update(expired_at=expired_at)
+                    await user.update(expired_at=expired_at).apply()
 
                     if request.session.get("info"):
                         info = request.session["info"]
@@ -86,10 +86,7 @@ class AuthService:
                                 }
                                 if info.get("realname"):
                                     userinfo["realname"] = info["realname"]
-                                await user.update(
-                                    unionid=unionid,
-                                    **userinfo,
-                                )
+                                await user.update(unionid=unionid, **userinfo).apply()
                         elif user.unionid and unionid != user.unionid:
                             code = 201
                             message = "当前登录用户已绑定钉钉，请在登录后解绑重试"
@@ -119,7 +116,7 @@ class AuthService:
                 expire = now + timedelta(minutes=settings.TOKEN_EXPIRE_MINUTES)
                 if PasswordContext.verify(data.password, user.password):
                     access_token = create_access_token(data={"sub": user.username}, expire=expire)
-                    await user.update(expired_at=expire)
+                    await user.update(expired_at=expire).apply()
                     return TokenResponse(access_token=access_token, token_type="bearer")
                 else:
                     raise UserAuthFailed

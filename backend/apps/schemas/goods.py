@@ -43,7 +43,7 @@ class Goods(RWModel):
     purchase_price: float = Field(None, title="进价")
     selling_price: float = Field(None, title="售价")
     inventory: int = Field(None, title="库存")
-    sales_volume: int = Field(None, title="销量")
+    sales: int = Field(None, title="销量")
     purchase_at: datetime = Field(None, title="入库时间")
 
 
@@ -67,7 +67,7 @@ class GoodsListRequest(PageListRequest):
     purchase_price: float = Field(None, title="进价")
     selling_price: float = Field(None, title="售价")
     inventory: int = Field(None, title="库存")
-    sales_volume: int = Field(None, title="销量")
+    sales: int = Field(None, title="销量")
     supplier: int = Field(None, description="供应商")
     purchase_at: datetime = Field(None, title="入库时间")
 
