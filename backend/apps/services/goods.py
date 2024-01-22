@@ -6,6 +6,7 @@ from backend.apps.core.errors import GoodsAlreadyExists, GoodsNotExists
 from backend.apps.core.pagination import generate_orm_clauses
 from backend.apps.models import db
 from backend.apps.models.goods import Goods as GoodsORM
+from backend.apps.models.supplier import Supplier as SupplierORM
 from backend.apps.schemas.goods import (
     GoodsAddRequest,
     GoodsListRequest,
@@ -49,12 +50,13 @@ class GoodsService:
                 inventory=GoodsORM.inventory,
                 sales=GoodsORM.sales,
                 supplier=GoodsORM.supplier,
-                purchase_at=GoodsORM.purchase_at,
+                updated_on=GoodsORM.updated_on,
             ),
             request,
         )
         columns = [
             GoodsORM.id,
+            GoodsORM.image,
             GoodsORM.name,
             GoodsORM.identifier,
             GoodsORM.purchase_price,
@@ -62,11 +64,13 @@ class GoodsService:
             GoodsORM.inventory,
             GoodsORM.sales,
             GoodsORM.month_sales,
-            GoodsORM.purchase_at,
-            GoodsORM.supplier,
+            GoodsORM.updated_on,
+            GoodsORM.supplier.label("supplier_id"),
+            SupplierORM.name.label("supplier"),
             GoodsORM.warranty,
             GoodsORM.notes,
         ]
+        select_from = GoodsORM.join(SupplierORM, GoodsORM.supplier == SupplierORM.id, isouter=True)
         order = getattr(getattr(GoodsORM, request.sort_k), request.sort)()
         goods = (
             await db.select(
@@ -81,6 +85,7 @@ class GoodsService:
                     ).label("type"),
                 ]
             )
+            .select_from(select_from)
             .where(and_(*clauses))
             .order_by(order)
             .gino.all()

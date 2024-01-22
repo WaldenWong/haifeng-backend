@@ -14,10 +14,10 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
 
     @validator("ALLOWED_HOSTS", "CAPTCHA_FONT_PATHS", pre=True)
-    def CommaSeparatedStrings(cls, v: Optional[str]) -> List[str]:  # noqa
+    def CommaSeparatedStrings(cls, v: Optional[List[str]]) -> List[str]:  # noqa
         if not v:
             return []
-        return [item.strip() for item in v.split(",")]
+        return v
 
     @property
     def DATABASE_CONFIG(self) -> DatabaseURL:  # noqa
@@ -56,7 +56,7 @@ class Settings(BaseSettings):
 
     # FASTAPI
     SAME_SITE: Optional[str] = None
-    ALLOWED_HOSTS: Optional[Union[str, List[str]]] = None
+    ALLOWED_HOSTS: Optional[List[str]] = ["*"]
 
     # DATABASE
     DB_NAME: str = "default"
